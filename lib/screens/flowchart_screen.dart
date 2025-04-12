@@ -22,10 +22,10 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
   }
 
   Future<void> _loadPeriods() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? periodsData = prefs.getString('periods');
-    if (periodsData != null) {
-      try {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? periodsData = prefs.getString('periods');
+      if (periodsData != null) {
         final List<dynamic> decodedData =
             json.decode(periodsData) as List<dynamic>;
         setState(() {
@@ -34,27 +34,35 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                   .map((e) => Map<String, dynamic>.from(e as Map))
                   .toList();
         });
-      } catch (e) {
-        print('Error al cargar los periodos: $e');
-        setState(() {
-          periods = [];
-        });
       }
+    } catch (e) {
+      print('Error al cargar los periodos: $e');
+      setState(() {
+        periods = [];
+      });
     }
   }
 
   Future<void> _savePeriods() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('periods', json.encode(periods));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('periods', json.encode(periods));
+    } catch (e) {
+      print('Error al guardar los periodos: $e');
+    }
   }
 
   Future<void> _clearPeriods() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('periods');
-    setState(() {
-      periods = [];
-    });
-    print('Datos limpiados. periods ahora está vacío.');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('periods');
+      setState(() {
+        periods = [];
+      });
+      print('Datos limpiados. periods ahora está vacío.');
+    } catch (e) {
+      print('Error al limpiar los periodos: $e');
+    }
   }
 
   void _addClass(
@@ -101,6 +109,38 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
       context: context,
       builder: (context) {
         return AddClassDialog(onAddClass: _addClass);
+      },
+    );
+  }
+
+  void _showClearConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmación'),
+          content: const Text(
+            '¿Estás seguro de que deseas borrar todos los datos?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _clearPeriods(); // Llama a la función para borrar los datos
+                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, // Botón rojo para "Eliminar"
+              ),
+              child: const Text('Borrar'),
+            ),
+          ],
+        );
       },
     );
   }
@@ -169,7 +209,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
         children: [
           FloatingActionButton(
             heroTag: 'clearJson',
-            onPressed: null,
+            onPressed:
+                _showClearConfirmationDialog, // Llama al cuadro de diálogo
             backgroundColor: Colors.grey,
             child: const Icon(
               Icons.delete,
