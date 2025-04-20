@@ -4,11 +4,17 @@ import 'class_card.dart';
 class PeriodSection extends StatelessWidget {
   final String romanNumber;
   final List<Map<String, dynamic>> classes;
+  final String? highlightedClassCode;
+  final Set<String> relatedClasses;
+  final Function(String) onClassTap;
 
   const PeriodSection({
     Key? key,
     required this.romanNumber,
     required this.classes,
+    this.highlightedClassCode,
+    required this.relatedClasses,
+    required this.onClassTap,
   }) : super(key: key);
 
   @override
@@ -20,7 +26,7 @@ class PeriodSection extends StatelessWidget {
             Color.fromARGB(105, 224, 224, 224),
             Colors.transparent,
             Colors.transparent,
-          ], // Gris más claro
+          ],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
@@ -48,11 +54,21 @@ class PeriodSection extends StatelessWidget {
                 runSpacing: 8.0,
                 children:
                     classes.map((classData) {
-                      return ClassCard(
-                        classCode: classData['classCode'],
-                        className: classData['className'],
-                        status: classData['status'],
-                        finalGrade: classData['finalGrade'],
+                      final isHighlighted =
+                          highlightedClassCode == classData['classCode'];
+                      final isRelated = relatedClasses.contains(
+                        classData['classCode'],
+                      );
+                      return GestureDetector(
+                        onTap: () => onClassTap(classData['classCode']),
+                        child: ClassCard(
+                          classCode: classData['classCode'],
+                          className: classData['className'],
+                          status: classData['status'],
+                          finalGrade: classData['finalGrade'],
+                          isHighlighted: isHighlighted,
+                          isRelated: isRelated,
+                        ),
                       );
                     }).toList(),
               ),

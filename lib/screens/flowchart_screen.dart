@@ -15,6 +15,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
   List<Map<String, dynamic>> periods = [];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  String? _highlightedClassCode;
+  Set<String> _relatedClasses = {};
+
   @override
   void initState() {
     super.initState();
@@ -24,17 +27,12 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
   Future<void> _loadPeriods() async {
     try {
       final snapshot = await _firestore.collection('periods').get();
-      print(
-        'Datos cargados desde Firestore: ${snapshot.docs.map((doc) => doc.data())}',
-      );
+
       setState(() {
-        periods =
-            snapshot.docs
-                .map((doc) => doc.data() as Map<String, dynamic>)
-                .toList();
+        periods = snapshot.docs.map((doc) => doc.data()).toList();
       });
     } catch (e) {
-      print('Error al cargar los periodos: $e');
+      throw Exception('Error al cargar los periodos: $e');
     }
   }
 
@@ -43,22 +41,37 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
       final batch = _firestore.batch();
       final collection = _firestore.collection('periods');
 
-      // Eliminar todos los documentos existentes
       final snapshot = await collection.get();
       for (var doc in snapshot.docs) {
         batch.delete(doc.reference);
       }
 
-      // Agregar los nuevos periodos
       for (var period in periods) {
         batch.set(collection.doc(), period);
       }
 
       await batch.commit();
-      print('Datos guardados correctamente en Firestore.');
     } catch (e) {
-      print('Error al guardar los periodos: $e');
+      throw Exception('Error al guardar los periodos: $e');
     }
+  }
+
+  void _showAddClassDialog() {
+    final allClasses =
+        periods
+            .expand((period) => period['classes'])
+            .map((classData) => classData['classCode'] as String)
+            .toList();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AddClassDialog(
+          onAddClass: _addClass,
+          availableClasses: allClasses,
+        );
+      },
+    );
   }
 
   void _addClass(
@@ -66,6 +79,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     String classCode,
     String className,
     double? grade,
+    List<String> dependencies,
   ) {
     final status =
         grade == null ? 'No cursada' : (grade >= 70 ? 'Aprobada' : 'Reprobada');
@@ -80,6 +94,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
           'className': className,
           'status': status,
           'finalGrade': grade,
+          'dependencies': dependencies,
         });
       } else {
         periods.add({
@@ -90,6 +105,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
               'className': className,
               'status': status,
               'finalGrade': grade,
+              'dependencies': dependencies,
             },
           ],
         });
@@ -99,23 +115,36 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     _savePeriods();
   }
 
-  void _showAddClassDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AddClassDialog(onAddClass: _addClass);
-      },
-    );
-  }
+  void _showDeleteClassDialog() {
+    final allClasses =
+        periods
+            .expand((period) => period['classes'])
+            .map((classData) => classData['classCode'] as String)
+            .toList();
 
-  void _showClearConfirmationDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        String? selectedClass;
+
         return AlertDialog(
-          title: const Text('Confirmación'),
-          content: const Text(
-            '¿Estás seguro de que deseas borrar todos los datos?',
+          title: const Text('Eliminar Clase'),
+          content: DropdownButtonFormField<String>(
+            decoration: const InputDecoration(
+              labelText: 'Selecciona una clase',
+            ),
+            items:
+                allClasses
+                    .map(
+                      (classCode) => DropdownMenuItem(
+                        value: classCode,
+                        child: Text(classCode),
+                      ),
+                    )
+                    .toList(),
+            onChanged: (value) {
+              selectedClass = value;
+            },
           ),
           actions: [
             TextButton(
@@ -126,19 +155,66 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  periods = [];
-                });
-                _savePeriods();
-                Navigator.of(context).pop();
+                if (selectedClass != null) {
+                  _deleteClass(selectedClass!);
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Por favor, selecciona una clase.'),
+                    ),
+                  );
+                }
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Borrar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Eliminar'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _deleteClass(String classCode) {
+    setState(() {
+      for (var period in periods) {
+        final classes = period['classes'] as List<dynamic>;
+        classes.removeWhere((classData) => classData['classCode'] == classCode);
+      }
+    });
+    _savePeriods();
+  }
+
+  void _onClassTap(String classCode) {
+    setState(() {
+      _highlightedClassCode = classCode;
+      _relatedClasses = _getRelatedClasses(classCode);
+    });
+  }
+
+  Set<String> _getRelatedClasses(String classCode) {
+    final relatedClasses = <String>{};
+
+    for (var period in periods) {
+      for (var classData in period['classes']) {
+        final dependencies =
+            (classData['dependencies'] as List<dynamic>?)?.cast<String>() ??
+            <String>[];
+
+        if (classData['classCode'] == classCode) {
+          relatedClasses.addAll(dependencies);
+        }
+
+        if (dependencies.contains(classCode)) {
+          relatedClasses.add(classData['classCode']);
+        }
+      }
+    }
+
+    return relatedClasses;
   }
 
   @override
@@ -180,7 +256,6 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Renderizar las secciones dinámicamente
               ...periods.map((period) {
                 return Column(
                   children: [
@@ -190,6 +265,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                           (period['classes'] as List<dynamic>)
                               .map((e) => Map<String, dynamic>.from(e as Map))
                               .toList(),
+                      highlightedClassCode: _highlightedClassCode,
+                      relatedClasses: _relatedClasses,
+                      onClassTap: _onClassTap,
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -204,13 +282,10 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'clearJson',
-            onPressed: _showClearConfirmationDialog,
-            backgroundColor: Colors.grey,
-            child: const Icon(
-              Icons.delete,
-              color: Color.fromARGB(255, 1, 32, 80),
-            ),
+            heroTag: 'deleteClass',
+            onPressed: _showDeleteClassDialog,
+            backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+            child: const Icon(Icons.delete, color: Colors.white),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(

@@ -5,6 +5,8 @@ class ClassCard extends StatelessWidget {
   final String className;
   final String status;
   final double? finalGrade;
+  final bool isHighlighted;
+  final bool isRelated;
 
   const ClassCard({
     Key? key,
@@ -12,6 +14,8 @@ class ClassCard extends StatelessWidget {
     required this.className,
     required this.status,
     this.finalGrade,
+    this.isHighlighted = false,
+    this.isRelated = false,
   }) : super(key: key);
 
   Color _getTopBorderColor() {
@@ -27,14 +31,23 @@ class ClassCard extends StatelessWidget {
     }
   }
 
+  Color _getBackgroundColor() {
+    if (isHighlighted) {
+      return const Color.fromARGB(255, 255, 249, 219);
+    } else if (isRelated) {
+      return const Color.fromARGB(255, 209, 230, 255);
+    } else {
+      return Colors.white;
+    }
+  }
+
   Color _getTextColor() {
-    switch (status) {
-      case 'Aprobada':
-        return Colors.green;
-      case 'Reprobada':
-        return Colors.red;
-      default:
-        return Colors.black54;
+    if (status == 'Aprobada') {
+      return Colors.green;
+    } else if (status == 'Reprobada') {
+      return Colors.red;
+    } else {
+      return Colors.black54;
     }
   }
 
@@ -42,7 +55,7 @@ class ClassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      color: Colors.white,
+      color: _getBackgroundColor(),
       child: IntrinsicWidth(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +70,6 @@ class ClassCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Contenido de la tarjeta
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -65,9 +77,9 @@ class ClassCard extends StatelessWidget {
                 children: [
                   Text(
                     classCode,
-                    style: const TextStyle(fontSize: 10, color: Colors.black54),
+                    style: const TextStyle(fontSize: 11, color: Colors.black54),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
                     className,
                     style: const TextStyle(
@@ -78,12 +90,12 @@ class ClassCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
                     status == 'Aprobada' || status == 'Reprobada'
-                        ? '$status: ${finalGrade?.toStringAsFixed(1) ?? ''}'
+                        ? '$status: ${finalGrade?.toInt() ?? ''}'
                         : status,
-                    style: TextStyle(fontSize: 10, color: _getTextColor()),
+                    style: TextStyle(fontSize: 11, color: _getTextColor()),
                   ),
                 ],
               ),

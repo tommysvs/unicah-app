@@ -6,10 +6,17 @@ class AddClassDialog extends StatefulWidget {
     String classCode,
     String className,
     double? grade,
+    List<String> dependencies,
   )
   onAddClass;
 
-  const AddClassDialog({Key? key, required this.onAddClass}) : super(key: key);
+  final List<String> availableClasses;
+
+  const AddClassDialog({
+    Key? key,
+    required this.onAddClass,
+    required this.availableClasses,
+  }) : super(key: key);
 
   @override
   State<AddClassDialog> createState() => _AddClassDialogState();
@@ -20,6 +27,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
   final _classNameController = TextEditingController();
   final _gradeController = TextEditingController();
   final _periodController = TextEditingController();
+  List<String> _dependencies = [];
 
   void _submit() {
     final period = _periodController.text;
@@ -37,8 +45,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
       return;
     }
 
-    // Si no se ingresa una nota, asumimos que la clase no ha sido llevada
-    widget.onAddClass(period, classCode, className, grade);
+    widget.onAddClass(period, classCode, className, grade, _dependencies);
     Navigator.pop(context);
   }
 
@@ -76,6 +83,45 @@ class _AddClassDialogState extends State<AddClassDialog> {
               controller: _gradeController,
               decoration: const InputDecoration(labelText: 'Nota (opcional)'),
               keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Agregar dependencia',
+              ),
+              items:
+                  widget.availableClasses
+                      .map(
+                        (classCode) => DropdownMenuItem(
+                          value: classCode,
+                          child: Text(classCode),
+                        ),
+                      )
+                      .toList(),
+              onChanged: (value) {
+                if (value != null && !_dependencies.contains(value)) {
+                  setState(() {
+                    _dependencies.add(value);
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children:
+                  _dependencies
+                      .map(
+                        (dependency) => Chip(
+                          label: Text(dependency),
+                          onDeleted: () {
+                            setState(() {
+                              _dependencies.remove(dependency);
+                            });
+                          },
+                        ),
+                      )
+                      .toList(),
             ),
           ],
         ),
