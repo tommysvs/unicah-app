@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490673328576",
+    "project_id": "unicah-app-t",
+    "storage_bucket": "unicah-app-t.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490673328576:android:6626e36ca0d4ff1385b825",
+        "android_client_info": {
+          "package_name": "com.example.unicah_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDviiFa7mXaUCthPc-35Hq3mz7oHJHagOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

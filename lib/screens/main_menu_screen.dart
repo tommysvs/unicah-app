@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io'; // Para detectar la plataforma
-import 'package:flutter/services.dart'; // Para minimizar en Android/iOS
+import 'dart:io';
+import 'package:flutter/services.dart';
 import '../widgets/custom_app_bar.dart';
 import 'flowchart_screen.dart';
 
@@ -11,13 +11,13 @@ class MainMenuScreen extends StatelessWidget {
     try {
       if (Platform.isWindows) {
         print('Cerrando la aplicación en Windows');
-        exit(0); // Cierra la aplicación en Windows
+        exit(0);
       } else if (Platform.isAndroid || Platform.isIOS) {
         print('Minimizando la aplicación en Android/iOS');
-        SystemNavigator.pop(); // Minimiza la aplicación en Android/iOS
+        SystemNavigator.pop();
       } else {
         print('Navegando hacia atrás');
-        Navigator.pop(context); // Comportamiento predeterminado
+        Navigator.pop(context);
       }
     } catch (e) {
       print('Error al intentar salir o minimizar la aplicación: $e');

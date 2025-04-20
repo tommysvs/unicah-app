@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/period_section.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/add_class_dialog.dart';
@@ -14,6 +13,7 @@ class FlowchartScreen extends StatefulWidget {
 
 class _FlowchartScreenState extends State<FlowchartScreen> {
   List<Map<String, dynamic>> periods = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -23,45 +23,41 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
 
   Future<void> _loadPeriods() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final String? periodsData = prefs.getString('periods');
-      if (periodsData != null) {
-        final List<dynamic> decodedData =
-            json.decode(periodsData) as List<dynamic>;
-        setState(() {
-          periods =
-              decodedData
-                  .map((e) => Map<String, dynamic>.from(e as Map))
-                  .toList();
-        });
-      }
+      final snapshot = await _firestore.collection('periods').get();
+      print(
+        'Datos cargados desde Firestore: ${snapshot.docs.map((doc) => doc.data())}',
+      );
+      setState(() {
+        periods =
+            snapshot.docs
+                .map((doc) => doc.data() as Map<String, dynamic>)
+                .toList();
+      });
     } catch (e) {
       print('Error al cargar los periodos: $e');
-      setState(() {
-        periods = [];
-      });
     }
   }
 
   Future<void> _savePeriods() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('periods', json.encode(periods));
+      final batch = _firestore.batch();
+      final collection = _firestore.collection('periods');
+
+      // Eliminar todos los documentos existentes
+      final snapshot = await collection.get();
+      for (var doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Agregar los nuevos periodos
+      for (var period in periods) {
+        batch.set(collection.doc(), period);
+      }
+
+      await batch.commit();
+      print('Datos guardados correctamente en Firestore.');
     } catch (e) {
       print('Error al guardar los periodos: $e');
-    }
-  }
-
-  Future<void> _clearPeriods() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('periods');
-      setState(() {
-        periods = [];
-      });
-      print('Datos limpiados. periods ahora está vacío.');
-    } catch (e) {
-      print('Error al limpiar los periodos: $e');
     }
   }
 
@@ -100,7 +96,6 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
       }
     });
 
-    print('Estructura actual de periods: $periods');
     _savePeriods();
   }
 
@@ -125,18 +120,19 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                Navigator.of(context).pop();
               },
               child: const Text('Cancelar'),
             ),
             ElevatedButton(
               onPressed: () {
-                _clearPeriods(); // Llama a la función para borrar los datos
-                Navigator.of(context).pop(); // Cierra el cuadro de diálogo
+                setState(() {
+                  periods = [];
+                });
+                _savePeriods();
+                Navigator.of(context).pop();
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, // Botón rojo para "Eliminar"
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text('Borrar'),
             ),
           ],
@@ -209,8 +205,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
         children: [
           FloatingActionButton(
             heroTag: 'clearJson',
-            onPressed:
-                _showClearConfirmationDialog, // Llama al cuadro de diálogo
+            onPressed: _showClearConfirmationDialog,
             backgroundColor: Colors.grey,
             child: const Icon(
               Icons.delete,
