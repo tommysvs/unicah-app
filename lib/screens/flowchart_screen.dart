@@ -238,7 +238,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const Text(
                       'HISTORIAL GRÁFICO',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -247,7 +247,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const Text(
                       'INGENIERÍA EN CIENCIAS DE LA COMPUTACIÓN',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.normal,
                       ),
                       textAlign: TextAlign.center,

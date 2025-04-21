@@ -53,54 +53,60 @@ class ClassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      color: _getBackgroundColor(),
-      child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 6,
-              decoration: BoxDecoration(
-                color: _getTopBorderColor(),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 140),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        color: _getBackgroundColor(),
+        child: IntrinsicWidth(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 6,
+                decoration: BoxDecoration(
+                  color: _getTopBorderColor(),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    classCode,
-                    style: const TextStyle(fontSize: 11, color: Colors.black54),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    className,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      classCode,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.black54,
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    status == 'Aprobada' || status == 'Reprobada'
-                        ? '$status: ${finalGrade?.toInt() ?? ''}'
-                        : status,
-                    style: TextStyle(fontSize: 11, color: _getTextColor()),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Text(
+                      className,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      status == 'Aprobada' || status == 'Reprobada'
+                          ? '$status: ${finalGrade?.toInt() ?? ''}'
+                          : status,
+                      style: TextStyle(fontSize: 10, color: _getTextColor()),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
