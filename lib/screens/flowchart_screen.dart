@@ -217,8 +217,53 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     return relatedClasses;
   }
 
+  int _romanToInt(String roman) {
+    final romanMap = {
+      'I': 1,
+      'II': 2,
+      'III': 3,
+      'IV': 4,
+      'V': 5,
+      'VI': 6,
+      'VII': 7,
+      'VIII': 8,
+      'IX': 9,
+      'X': 10,
+    };
+
+    return romanMap[roman] ?? 0;
+  }
+
+  List<Map<String, dynamic>> _getSortedPeriods() {
+    final sortedPeriods = List<Map<String, dynamic>>.from(periods);
+    sortedPeriods.sort((a, b) {
+      final romanA = a['romanNumber'] as String;
+      final romanB = b['romanNumber'] as String;
+      return _romanToInt(romanA).compareTo(_romanToInt(romanB));
+    });
+    return sortedPeriods;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final totalClasses =
+        periods.expand((period) => period['classes'] as List<dynamic>).toList();
+
+    final grades =
+        totalClasses
+            .where((classData) => classData['finalGrade'] != null)
+            .map((classData) => classData['finalGrade'] as double)
+            .toList();
+    final averageGrade =
+        grades.isNotEmpty
+            ? (grades.reduce((a, b) => a + b) / grades.length)
+            : 0;
+
+    final approvedClasses =
+        totalClasses
+            .where((classData) => classData['status'] == 'Aprobada')
+            .length;
+
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'Historial gráfico',
@@ -252,11 +297,62 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 0, 76, 190),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Text(
+                                grades.isNotEmpty
+                                    ? 'Promedio Total: ${averageGrade.toStringAsFixed(2)}'
+                                    : 'Promedio Total: N/A',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 0, 76, 190),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Text(
+                                'Clases Aprobadas: $approvedClasses',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              ...periods.map((period) {
+              ..._getSortedPeriods().map((period) {
                 return Column(
                   children: [
                     PeriodSection(
