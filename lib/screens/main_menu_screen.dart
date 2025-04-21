@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import '../widgets/custom_app_bar.dart';
 import 'flowchart_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({Key? key}) : super(key: key);
-
-  void _handleExit(BuildContext context) {
-    try {
-      if (Platform.isWindows) {
-        exit(0);
-      } else if (Platform.isAndroid || Platform.isIOS) {
-        SystemNavigator.pop();
-      } else {
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      throw Exception('Error al salir de la aplicación: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
