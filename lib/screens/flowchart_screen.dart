@@ -347,8 +347,10 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 16.0, // Espaciado horizontal entre los elementos
+                      runSpacing: 8.0, // Espaciado vertical entre las líneas
                       children: [
                         Column(
                           children: [
@@ -373,7 +375,6 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 16),
                         Column(
                           children: [
                             Container(
@@ -395,7 +396,6 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 16),
                         Column(
                           children: [
                             Container(
