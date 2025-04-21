@@ -70,6 +70,11 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
       'VIII': 8,
       'IX': 9,
       'X': 10,
+      'XI': 11,
+      'XII': 12,
+      'XIII': 13,
+      'XIV': 14,
+      'XV': 15,
     };
 
     return romanMap[roman] ?? 0;
@@ -209,7 +214,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
             'className': updatedClassName,
             'status': updatedStatus,
             'finalGrade': updatedFinalGrade,
-            'dependencies': updatedDependencies, // Guardar dependencias
+            'dependencies': updatedDependencies,
           };
         }
       }
@@ -282,9 +287,17 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     final totalClasses =
         periods.expand((period) => period['classes'] as List<dynamic>).toList();
 
-    final grades =
+    final gradedClasses =
         totalClasses
-            .where((classData) => classData['finalGrade'] != null)
+            .where(
+              (classData) =>
+                  classData['finalGrade'] != null &&
+                  classData['finalGrade'] != 0,
+            )
+            .toList();
+
+    final grades =
+        gradedClasses
             .map((classData) => classData['finalGrade'] as double)
             .toList();
     final averageGrade =
@@ -293,9 +306,12 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
             : 0;
 
     final approvedClasses =
-        totalClasses
+        gradedClasses
             .where((classData) => classData['status'] == 'Aprobada')
             .length;
+
+    const totalCareerClasses = 60;
+    final careerProgress = (approvedClasses / totalCareerClasses) * 100;
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -347,8 +363,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               ),
                               child: Text(
                                 grades.isNotEmpty
-                                    ? 'Promedio Total: ${averageGrade.toStringAsFixed(2)}'
-                                    : 'Promedio Total: N/A',
+                                    ? 'Promedio total: ${averageGrade.toStringAsFixed(2)}%'
+                                    : 'Promedio total: N/A',
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.white,
@@ -371,6 +387,28 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               ),
                               child: Text(
                                 'Clases Aprobadas: $approvedClasses',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 0, 76, 190),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Text(
+                                'Porcentaje de carrera: ${careerProgress.toStringAsFixed(2)}%',
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.white,

@@ -99,7 +99,7 @@ class ClassCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       status == 'Aprobada' || status == 'Reprobada'
-                          ? '$status: ${finalGrade?.toInt() ?? ''}'
+                          ? '$status: ${finalGrade?.toInt() ?? ''}%'
                           : status,
                       style: TextStyle(fontSize: 10, color: _getTextColor()),
                     ),
