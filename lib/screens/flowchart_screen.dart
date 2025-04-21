@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/period_section.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/add_class_dialog.dart';
+import '../widgets/edit_class_dialog.dart';
 
 class FlowchartScreen extends StatefulWidget {
   const FlowchartScreen({Key? key}) : super(key: key);
@@ -244,6 +245,80 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     return sortedPeriods;
   }
 
+  void _editClass(
+    String period,
+    String originalClassCode,
+    String updatedClassCode,
+    String updatedClassName,
+    String updatedStatus,
+    double? updatedFinalGrade,
+    List<String> updatedDependencies,
+  ) {
+    setState(() {
+      final periodIndex = periods.indexWhere((p) => p['romanNumber'] == period);
+
+      if (periodIndex != -1) {
+        final classes = periods[periodIndex]['classes'] as List<dynamic>;
+        final classIndex = classes.indexWhere(
+          (c) => c['classCode'] == originalClassCode,
+        );
+
+        if (classIndex != -1) {
+          classes[classIndex] = {
+            'classCode': updatedClassCode,
+            'className': updatedClassName,
+            'status': updatedStatus,
+            'finalGrade': updatedFinalGrade,
+            'dependencies': updatedDependencies, // Guardar dependencias
+          };
+        }
+      }
+    });
+
+    _savePeriods();
+  }
+
+  void _showEditClassDialog(String period, Map<String, dynamic> classData) {
+    final allClasses =
+        periods
+            .expand((p) => p['classes'])
+            .map((c) => c['classCode'] as String)
+            .toList();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return EditClassDialog(
+          classCode: classData['classCode'] as String,
+          className: classData['className'] as String,
+          status: classData['status'] as String,
+          finalGrade: classData['finalGrade'] as double?,
+          allClasses: allClasses,
+          dependencies:
+              (classData['dependencies'] as List<dynamic>?)?.cast<String>() ??
+              [],
+          onEditClass: (
+            updatedClassCode,
+            updatedClassName,
+            updatedStatus,
+            updatedFinalGrade,
+            updatedDependencies,
+          ) {
+            _editClass(
+              period,
+              classData['classCode'],
+              updatedClassCode,
+              updatedClassName,
+              updatedStatus,
+              updatedFinalGrade,
+              updatedDependencies,
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final totalClasses =
@@ -364,6 +439,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                       highlightedClassCode: _highlightedClassCode,
                       relatedClasses: _relatedClasses,
                       onClassTap: _onClassTap,
+                      onEditClass: (classData) {
+                        _showEditClassDialog(period['romanNumber'], classData);
+                      },
                     ),
                     const SizedBox(height: 16),
                   ],

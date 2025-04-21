@@ -7,6 +7,7 @@ class PeriodSection extends StatelessWidget {
   final String? highlightedClassCode;
   final Set<String> relatedClasses;
   final Function(String) onClassTap;
+  final Function(Map<String, dynamic>) onEditClass;
 
   const PeriodSection({
     Key? key,
@@ -15,6 +16,7 @@ class PeriodSection extends StatelessWidget {
     this.highlightedClassCode,
     required this.relatedClasses,
     required this.onClassTap,
+    required this.onEditClass,
   }) : super(key: key);
 
   @override
@@ -61,6 +63,7 @@ class PeriodSection extends StatelessWidget {
                       );
                       return GestureDetector(
                         onTap: () => onClassTap(classData['classCode']),
+                        onLongPress: () => onEditClass(classData),
                         child: ClassCard(
                           classCode: classData['classCode'],
                           className: classData['className'],

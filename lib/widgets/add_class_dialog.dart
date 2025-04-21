@@ -92,12 +92,13 @@ class _AddClassDialogState extends State<AddClassDialog> {
               items:
                   widget.availableClasses
                       .map(
-                        (classCode) => DropdownMenuItem(
+                        (classCode) => DropdownMenuItem<String>(
                           value: classCode,
                           child: Text(classCode),
                         ),
                       )
-                      .toList(),
+                      .toList()
+                    ..sort((a, b) => a.value!.compareTo(b.value!)),
               onChanged: (value) {
                 if (value != null && !_dependencies.contains(value)) {
                   setState(() {
