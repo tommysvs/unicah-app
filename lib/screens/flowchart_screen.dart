@@ -4,6 +4,7 @@ import '../widgets/period_section.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/add_class_dialog.dart';
 import '../widgets/edit_class_dialog.dart';
+import '../widgets/delete_class_dialog.dart';
 
 class FlowchartScreen extends StatefulWidget {
   const FlowchartScreen({Key? key}) : super(key: key);
@@ -55,6 +56,33 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     } catch (e) {
       throw Exception('Error al guardar los periodos: $e');
     }
+  }
+
+  int _romanToInt(String roman) {
+    final romanMap = {
+      'I': 1,
+      'II': 2,
+      'III': 3,
+      'IV': 4,
+      'V': 5,
+      'VI': 6,
+      'VII': 7,
+      'VIII': 8,
+      'IX': 9,
+      'X': 10,
+    };
+
+    return romanMap[roman] ?? 0;
+  }
+
+  List<Map<String, dynamic>> _getSortedPeriods() {
+    final sortedPeriods = List<Map<String, dynamic>>.from(periods);
+    sortedPeriods.sort((a, b) {
+      final romanA = a['romanNumber'] as String;
+      final romanB = b['romanNumber'] as String;
+      return _romanToInt(romanA).compareTo(_romanToInt(romanB));
+    });
+    return sortedPeriods;
   }
 
   void _showAddClassDialog() {
@@ -116,168 +144,6 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     _savePeriods();
   }
 
-  void _showDeleteClassDialog() {
-    final allClasses =
-        periods
-            .expand((period) => period['classes'])
-            .map((classData) => classData['classCode'] as String)
-            .toList();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        String? selectedClass;
-
-        return AlertDialog(
-          title: const Text('Eliminar Clase'),
-          content: DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              labelText: 'Selecciona una clase',
-            ),
-            items:
-                allClasses
-                    .map(
-                      (classCode) => DropdownMenuItem(
-                        value: classCode,
-                        child: Text(classCode),
-                      ),
-                    )
-                    .toList(),
-            onChanged: (value) {
-              selectedClass = value;
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (selectedClass != null) {
-                  _deleteClass(selectedClass!);
-                  Navigator.of(context).pop();
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Por favor, selecciona una clase.'),
-                    ),
-                  );
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Eliminar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _deleteClass(String classCode) {
-    setState(() {
-      for (var period in periods) {
-        final classes = period['classes'] as List<dynamic>;
-        classes.removeWhere((classData) => classData['classCode'] == classCode);
-      }
-    });
-    _savePeriods();
-  }
-
-  void _onClassTap(String classCode) {
-    setState(() {
-      _highlightedClassCode = classCode;
-      _relatedClasses = _getRelatedClasses(classCode);
-    });
-  }
-
-  Set<String> _getRelatedClasses(String classCode) {
-    final relatedClasses = <String>{};
-
-    for (var period in periods) {
-      for (var classData in period['classes']) {
-        final dependencies =
-            (classData['dependencies'] as List<dynamic>?)?.cast<String>() ??
-            <String>[];
-
-        if (classData['classCode'] == classCode) {
-          relatedClasses.addAll(dependencies);
-        }
-
-        if (dependencies.contains(classCode)) {
-          relatedClasses.add(classData['classCode']);
-        }
-      }
-    }
-
-    return relatedClasses;
-  }
-
-  int _romanToInt(String roman) {
-    final romanMap = {
-      'I': 1,
-      'II': 2,
-      'III': 3,
-      'IV': 4,
-      'V': 5,
-      'VI': 6,
-      'VII': 7,
-      'VIII': 8,
-      'IX': 9,
-      'X': 10,
-    };
-
-    return romanMap[roman] ?? 0;
-  }
-
-  List<Map<String, dynamic>> _getSortedPeriods() {
-    final sortedPeriods = List<Map<String, dynamic>>.from(periods);
-    sortedPeriods.sort((a, b) {
-      final romanA = a['romanNumber'] as String;
-      final romanB = b['romanNumber'] as String;
-      return _romanToInt(romanA).compareTo(_romanToInt(romanB));
-    });
-    return sortedPeriods;
-  }
-
-  void _editClass(
-    String period,
-    String originalClassCode,
-    String updatedClassCode,
-    String updatedClassName,
-    String updatedStatus,
-    double? updatedFinalGrade,
-    List<String> updatedDependencies,
-  ) {
-    setState(() {
-      final periodIndex = periods.indexWhere((p) => p['romanNumber'] == period);
-
-      if (periodIndex != -1) {
-        final classes = periods[periodIndex]['classes'] as List<dynamic>;
-        final classIndex = classes.indexWhere(
-          (c) => c['classCode'] == originalClassCode,
-        );
-
-        if (classIndex != -1) {
-          classes[classIndex] = {
-            'classCode': updatedClassCode,
-            'className': updatedClassName,
-            'status': updatedStatus,
-            'finalGrade': updatedFinalGrade,
-            'dependencies': updatedDependencies, // Guardar dependencias
-          };
-        }
-      }
-    });
-
-    _savePeriods();
-  }
-
   void _showEditClassDialog(String period, Map<String, dynamic> classData) {
     final allClasses =
         periods
@@ -317,6 +183,98 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
         );
       },
     );
+  }
+
+  void _editClass(
+    String period,
+    String originalClassCode,
+    String updatedClassCode,
+    String updatedClassName,
+    String updatedStatus,
+    double? updatedFinalGrade,
+    List<String> updatedDependencies,
+  ) {
+    setState(() {
+      final periodIndex = periods.indexWhere((p) => p['romanNumber'] == period);
+
+      if (periodIndex != -1) {
+        final classes = periods[periodIndex]['classes'] as List<dynamic>;
+        final classIndex = classes.indexWhere(
+          (c) => c['classCode'] == originalClassCode,
+        );
+
+        if (classIndex != -1) {
+          classes[classIndex] = {
+            'classCode': updatedClassCode,
+            'className': updatedClassName,
+            'status': updatedStatus,
+            'finalGrade': updatedFinalGrade,
+            'dependencies': updatedDependencies, // Guardar dependencias
+          };
+        }
+      }
+    });
+
+    _savePeriods();
+  }
+
+  void _showDeleteClassDialog() {
+    final allClasses =
+        periods
+            .expand((period) => period['classes'])
+            .map((classData) => classData['classCode'] as String)
+            .toList();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DeleteClassDialog(
+          allClasses: allClasses,
+          onDeleteClass: (selectedClass) {
+            _deleteClass(selectedClass);
+          },
+        );
+      },
+    );
+  }
+
+  void _deleteClass(String classCode) {
+    setState(() {
+      for (var period in periods) {
+        final classes = period['classes'] as List<dynamic>;
+        classes.removeWhere((classData) => classData['classCode'] == classCode);
+      }
+    });
+    _savePeriods();
+  }
+
+  Set<String> _getRelatedClasses(String classCode) {
+    final relatedClasses = <String>{};
+
+    for (var period in periods) {
+      for (var classData in period['classes']) {
+        final dependencies =
+            (classData['dependencies'] as List<dynamic>?)?.cast<String>() ??
+            <String>[];
+
+        if (classData['classCode'] == classCode) {
+          relatedClasses.addAll(dependencies);
+        }
+
+        if (dependencies.contains(classCode)) {
+          relatedClasses.add(classData['classCode']);
+        }
+      }
+    }
+
+    return relatedClasses;
+  }
+
+  void _onClassTap(String classCode) {
+    setState(() {
+      _highlightedClassCode = classCode;
+      _relatedClasses = _getRelatedClasses(classCode);
+    });
   }
 
   @override
