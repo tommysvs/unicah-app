@@ -332,7 +332,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const Text(
                       'HISTORIAL GRÁFICO',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -341,7 +341,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const Text(
                       'INGENIERÍA EN CIENCIAS DE LA COMPUTACIÓN',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.normal,
                       ),
                       textAlign: TextAlign.center,
@@ -368,7 +368,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                                     ? 'Promedio total: ${averageGrade.toStringAsFixed(2)}%'
                                     : 'Promedio total: N/A',
                                 style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.white,
                                 ),
                               ),
@@ -389,7 +389,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               child: Text(
                                 'Clases Aprobadas: $approvedClasses',
                                 style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.white,
                                 ),
                               ),
@@ -410,7 +410,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               child: Text(
                                 'Porcentaje de carrera: ${careerProgress.toStringAsFixed(2)}%',
                                 style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   color: Colors.white,
                                 ),
                               ),

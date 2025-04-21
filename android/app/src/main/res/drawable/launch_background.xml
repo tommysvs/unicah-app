@@ -4,6 +4,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/logo_unicah_icon.png" />
+            android:src="@drawable/logo_unicah_icon" />
     </item>
 </layer-list>

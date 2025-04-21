@@ -53,61 +53,75 @@ class ClassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final maxWidth = (screenWidth / (screenWidth > 1080 ? 3 : 2)).clamp(
+      90.0,
+      130.0,
+    );
+
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 130, maxHeight: 130),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        color: _getBackgroundColor(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 6,
-              decoration: BoxDecoration(
-                color: _getTopBorderColor(),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
+      constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: 100.0),
+      child: IntrinsicWidth(
+        child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          color: _getBackgroundColor(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 6,
+                decoration: BoxDecoration(
+                  color: _getTopBorderColor(),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(6),
+                    topRight: Radius.circular(6),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      classCode,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.black54,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 4.0,
+                    bottom: 4.0,
+                    left: 12.0,
+                    right: 12.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        classCode,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          color: Colors.black54,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      className,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                      const SizedBox(height: 2),
+                      Text(
+                        className,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      status == 'Aprobada' || status == 'Reprobada'
-                          ? '$status: ${finalGrade?.toInt() ?? ''}%'
-                          : status,
-                      style: TextStyle(fontSize: 10, color: _getTextColor()),
-                    ),
-                  ],
+                      const SizedBox(height: 2),
+                      Text(
+                        status == 'Aprobada' || status == 'Reprobada'
+                            ? '$status: ${finalGrade?.toInt() ?? ''}%'
+                            : status,
+                        style: TextStyle(fontSize: 9, color: _getTextColor()),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

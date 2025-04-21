@@ -44,16 +44,15 @@ class PeriodSection extends StatelessWidget {
               child: Text(
                 romanNumber,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const SizedBox(width: 16),
             Expanded(
               child: Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
+                spacing: 1.5,
+                runSpacing: 1.5,
                 children:
                     classes.map((classData) {
                       final isHighlighted =
