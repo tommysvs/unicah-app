@@ -54,7 +54,7 @@ class ClassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 150, maxHeight: 120),
+      constraints: const BoxConstraints(maxWidth: 130, maxHeight: 130),
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: _getBackgroundColor(),
@@ -93,7 +93,7 @@ class ClassCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
-                      maxLines: 2,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
