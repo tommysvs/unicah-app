@@ -13,10 +13,10 @@ class AddClassDialog extends StatefulWidget {
   final List<String> availableClasses;
 
   const AddClassDialog({
-    Key? key,
+    super.key,
     required this.onAddClass,
     required this.availableClasses,
-  }) : super(key: key);
+  });
 
   @override
   State<AddClassDialog> createState() => _AddClassDialogState();
@@ -27,7 +27,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
   final _classNameController = TextEditingController();
   final _gradeController = TextEditingController();
   final _periodController = TextEditingController();
-  List<String> _dependencies = [];
+  final List<String> _dependencies = [];
 
   void _submit() {
     final period = _periodController.text;

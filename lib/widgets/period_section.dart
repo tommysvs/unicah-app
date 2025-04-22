@@ -10,24 +10,24 @@ class PeriodSection extends StatelessWidget {
   final Function(Map<String, dynamic>) onEditClass;
 
   const PeriodSection({
-    Key? key,
+    super.key,
     required this.romanNumber,
     required this.classes,
     this.highlightedClassCode,
     required this.relatedClasses,
     required this.onClassTap,
     required this.onEditClass,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
+        color: Colors.white,
         gradient: LinearGradient(
           colors: [
-            Color.fromARGB(105, 224, 224, 224),
-            Colors.transparent,
-            Colors.transparent,
+            Color.fromARGB(85, 219, 219, 219),
+            Color.fromARGB(0, 216, 225, 255),
           ],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,

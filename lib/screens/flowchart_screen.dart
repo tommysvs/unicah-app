@@ -7,7 +7,7 @@ import '../widgets/edit_class_dialog.dart';
 import '../widgets/delete_class_dialog.dart';
 
 class FlowchartScreen extends StatefulWidget {
-  const FlowchartScreen({Key? key}) : super(key: key);
+  const FlowchartScreen({super.key});
 
   @override
   State<FlowchartScreen> createState() => _FlowchartScreenState();
@@ -442,7 +442,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const SizedBox(height: 16),
                   ],
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),

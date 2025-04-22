@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../widgets/custom_app_bar.dart';
 import 'flowchart_screen.dart';
+import 'academic_calendar_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
-  const MainMenuScreen({Key? key}) : super(key: key);
+  const MainMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,15 @@ class MainMenuScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const AcademicCalendarsScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     Container(
@@ -107,8 +115,15 @@ class MainMenuScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: Column(
+            padding: const EdgeInsets.only(
+              bottom: 16.0,
+              left: 32.0,
+              right: 32.0,
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8.0,
+              runSpacing: 4.0,
               children: const [
                 Text(
                   'v1.0.0',
@@ -120,8 +135,9 @@ class MainMenuScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Esta aplicación es solo para uso personal.',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  'Esta aplicación es solo para uso personal y no pretende reemplazar la aplicación oficial de la UNICAH.',
+                  style: TextStyle(fontSize: 11, color: Colors.grey),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
