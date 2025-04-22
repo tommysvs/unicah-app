@@ -5,6 +5,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/add_class_dialog.dart';
 import '../widgets/edit_class_dialog.dart';
 import '../widgets/delete_class_dialog.dart';
+import '../utils/pdf_exporter.dart';
 
 class FlowchartScreen extends StatefulWidget {
   const FlowchartScreen({super.key});
@@ -349,8 +350,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const SizedBox(height: 16),
                     Wrap(
                       alignment: WrapAlignment.center,
-                      spacing: 16.0, // Espaciado horizontal entre los elementos
-                      runSpacing: 8.0, // Espaciado vertical entre las líneas
+                      spacing: 16.0,
+                      runSpacing: 8.0,
                       children: [
                         Column(
                           children: [
@@ -447,24 +448,56 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'deleteClass',
-            onPressed: _showDeleteClassDialog,
-            backgroundColor: const Color.fromARGB(255, 0, 76, 190),
-            child: const Icon(Icons.delete, color: Colors.white),
+      bottomNavigationBar: BottomAppBar(
+        color: const Color.fromARGB(255, 0, 76, 190),
+        shape: const CircularNotchedRectangle(),
+        child: Container(
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed:
+                    () => PDFExporter.exportToPDF(
+                      periods,
+                      'Historial Gráfico',
+                      'Ingeniería en Ciencias de la Computación',
+                    ),
+                icon: const Icon(
+                  Icons.picture_as_pdf,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                tooltip: 'Exportar a PDF',
+              ),
+              const VerticalDivider(
+                color: Colors.white,
+                thickness: 1,
+                width: 16,
+                indent: 8,
+                endIndent: 8,
+              ),
+              IconButton(
+                onPressed: _showDeleteClassDialog,
+                icon: const Icon(Icons.delete, color: Colors.white, size: 20),
+                tooltip: 'Eliminar clase',
+              ),
+              const VerticalDivider(
+                color: Colors.white,
+                thickness: 1,
+                width: 16,
+                indent: 8,
+                endIndent: 8,
+              ),
+              IconButton(
+                onPressed: _showAddClassDialog,
+                icon: const Icon(Icons.add, color: Colors.white, size: 20),
+                tooltip: 'Agregar clase',
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            heroTag: 'addClass',
-            onPressed: _showAddClassDialog,
-            backgroundColor: const Color.fromARGB(255, 0, 76, 190),
-            child: const Icon(Icons.add, color: Colors.white),
-          ),
-        ],
+        ),
       ),
     );
   }
