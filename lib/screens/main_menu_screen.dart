@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 import 'flowchart_screen.dart';
 import 'academic_calendar_screen.dart';
+import 'class_history_screen.dart';
+import 'general_progress_screen.dart';
+import 'class_recommendations_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -10,7 +13,7 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomAppBar(title: 'Sección de registro'),
+      appBar: const CustomAppBar(title: 'Registro'),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -28,6 +31,7 @@ class MainMenuScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   shrinkWrap: true,
                   children: [
+                    // Opción: Calendarios académicos
                     Container(
                       decoration: const BoxDecoration(
                         border: Border(
@@ -43,11 +47,8 @@ class MainMenuScreen extends StatelessWidget {
                           color: Colors.blue,
                         ),
                         title: const Text(
-                          'Calendarios académicos',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          'Calendario académico',
+                          style: TextStyle(fontSize: 16),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -60,6 +61,7 @@ class MainMenuScreen extends StatelessWidget {
                         },
                       ),
                     ),
+                    // Opción: Historial gráfico
                     Container(
                       decoration: const BoxDecoration(
                         border: Border(
@@ -73,10 +75,7 @@ class MainMenuScreen extends StatelessWidget {
                         leading: const Icon(Icons.schema, color: Colors.blue),
                         title: const Text(
                           'Historial gráfico',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: 16),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -87,7 +86,7 @@ class MainMenuScreen extends StatelessWidget {
                           );
                         },
                       ),
-                    ),
+                    ), // Opción: Historial de clases
                     Container(
                       decoration: const BoxDecoration(
                         border: Border(
@@ -101,12 +100,77 @@ class MainMenuScreen extends StatelessWidget {
                         leading: const Icon(Icons.book, color: Colors.blue),
                         title: const Text(
                           'Historial de clases',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ClassHistoryScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    // Opción: Progreso general
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Color.fromARGB(255, 205, 205, 205),
+                            width: 0.5,
                           ),
                         ),
-                        onTap: () {},
+                      ),
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.bar_chart,
+                          color: Colors.blue,
+                        ),
+                        title: const Text(
+                          'Progreso general',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const GeneralProgressScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    // Opción: Recomendaciones de clases
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Color.fromARGB(255, 205, 205, 205),
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.lightbulb,
+                          color: Colors.blue,
+                        ),
+                        title: const Text(
+                          'Recomendación de clases',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      const ClassRecommendationsScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],

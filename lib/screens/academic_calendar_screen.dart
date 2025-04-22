@@ -15,7 +15,7 @@ class AcademicCalendarsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const CustomAppBar(
-        title: 'Calendarios Académicos',
+        title: 'Calendario académico',
         showBackButton: true,
       ),
       backgroundColor: Colors.white,
@@ -30,7 +30,7 @@ class AcademicCalendarsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'CALENDARIOS ACADÉMICOS',
+                      'CALENDARIO ACADÉMICO',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -74,28 +74,36 @@ class AcademicCalendarsScreen extends StatelessWidget {
                                 context: context,
                                 builder: (context) {
                                   return Dialog(
-                                    child: InteractiveViewer(
-                                      panEnabled: true,
-                                      boundaryMargin: const EdgeInsets.all(20),
-                                      minScale: 0.5,
-                                      maxScale: 4.0,
-                                      child: Image.asset(
-                                        calendar['image']!,
-                                        fit: BoxFit.contain,
-                                        errorBuilder: (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) {
-                                          return const Center(
-                                            child: Text(
-                                              'No se pudo cargar la imagen',
-                                              style: TextStyle(
-                                                color: Colors.red,
+                                    insetPadding: EdgeInsets.zero,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      color: Colors.black,
+                                      child: InteractiveViewer(
+                                        panEnabled: true,
+                                        boundaryMargin: const EdgeInsets.all(
+                                          20,
+                                        ),
+                                        minScale: 0.5,
+                                        maxScale: 4.0,
+                                        child: Image.asset(
+                                          calendar['image']!,
+                                          fit: BoxFit.contain,
+                                          errorBuilder: (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) {
+                                            return const Center(
+                                              child: Text(
+                                                'No se pudo cargar la imagen',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                   );
