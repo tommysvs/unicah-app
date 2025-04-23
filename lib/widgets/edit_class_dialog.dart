@@ -7,18 +7,25 @@ class EditClassDialog extends StatefulWidget {
   final double? finalGrade;
   final List<String> allClasses;
   final List<String> dependencies;
-  final Function(String, String, String, double?, List<String>) onEditClass;
+  final int academicYear;
+  final int academicPeriod;
+  final int credits;
+  final Function(String, String, String, double?, List<String>, int, int, int)
+  onEditClass;
 
   const EditClassDialog({
-    Key? key,
+    super.key,
     required this.classCode,
     required this.className,
     required this.status,
     required this.finalGrade,
     required this.allClasses,
     required this.dependencies,
+    required this.academicYear,
+    required this.academicPeriod,
+    required this.credits,
     required this.onEditClass,
-  }) : super(key: key);
+  });
 
   @override
   State<EditClassDialog> createState() => _EditClassDialogState();
@@ -28,7 +35,10 @@ class _EditClassDialogState extends State<EditClassDialog> {
   late TextEditingController _classCodeController;
   late TextEditingController _classNameController;
   late TextEditingController _finalGradeController;
+  late TextEditingController _academicYearController;
+  late TextEditingController _creditsController;
   String _status = 'No cursada';
+  late int _academicPeriod;
   List<String> _selectedDependencies = [];
 
   @override
@@ -39,7 +49,12 @@ class _EditClassDialogState extends State<EditClassDialog> {
     _finalGradeController = TextEditingController(
       text: widget.finalGrade != null ? widget.finalGrade.toString() : '',
     );
+    _academicYearController = TextEditingController(
+      text: widget.academicYear.toString(),
+    );
+    _creditsController = TextEditingController(text: widget.credits.toString());
     _status = widget.status;
+    _academicPeriod = widget.academicPeriod;
     _selectedDependencies = List<String>.from(widget.dependencies);
   }
 
@@ -48,6 +63,8 @@ class _EditClassDialogState extends State<EditClassDialog> {
     _classCodeController.dispose();
     _classNameController.dispose();
     _finalGradeController.dispose();
+    _academicYearController.dispose();
+    _creditsController.dispose();
     super.dispose();
   }
 
@@ -98,6 +115,33 @@ class _EditClassDialogState extends State<EditClassDialog> {
             TextField(
               controller: _finalGradeController,
               decoration: const InputDecoration(labelText: 'Nota Final'),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _academicYearController,
+              decoration: const InputDecoration(labelText: 'Año Académico'),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              decoration: const InputDecoration(labelText: 'Período Académico'),
+              value: _academicPeriod,
+              items: const [
+                DropdownMenuItem(value: 1, child: Text('1')),
+                DropdownMenuItem(value: 2, child: Text('2')),
+                DropdownMenuItem(value: 3, child: Text('3')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _academicPeriod = value ?? 1;
+                });
+              },
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _creditsController,
+              decoration: const InputDecoration(labelText: 'Créditos'),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
@@ -159,6 +203,10 @@ class _EditClassDialogState extends State<EditClassDialog> {
                 _finalGradeController.text.isNotEmpty
                     ? double.tryParse(_finalGradeController.text)
                     : null;
+            final updatedAcademicYear =
+                int.tryParse(_academicYearController.text.trim()) ?? 0;
+            final updatedCredits =
+                int.tryParse(_creditsController.text.trim()) ?? 0;
 
             widget.onEditClass(
               updatedClassCode,
@@ -166,6 +214,9 @@ class _EditClassDialogState extends State<EditClassDialog> {
               _status,
               updatedFinalGrade,
               _selectedDependencies,
+              updatedAcademicYear,
+              _academicPeriod,
+              updatedCredits,
             );
 
             Navigator.of(context).pop();

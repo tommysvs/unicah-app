@@ -7,6 +7,9 @@ class AddClassDialog extends StatefulWidget {
     String className,
     double? grade,
     List<String> dependencies,
+    int academicYear,
+    int academicPeriod,
+    int credits,
   )
   onAddClass;
 
@@ -27,6 +30,9 @@ class _AddClassDialogState extends State<AddClassDialog> {
   final _classNameController = TextEditingController();
   final _gradeController = TextEditingController();
   final _periodController = TextEditingController();
+  final _academicYearController = TextEditingController();
+  final _creditsController = TextEditingController();
+  int _academicPeriod = 1; // Valor inicial para el período académico
   final List<String> _dependencies = [];
 
   void _submit() {
@@ -35,8 +41,14 @@ class _AddClassDialogState extends State<AddClassDialog> {
     final className = _classNameController.text;
     final gradeText = _gradeController.text;
     final grade = gradeText.isNotEmpty ? double.tryParse(gradeText) : null;
+    final academicYearText = _academicYearController.text;
+    final creditsText = _creditsController.text;
 
-    if (period.isEmpty || classCode.isEmpty || className.isEmpty) {
+    if (period.isEmpty ||
+        classCode.isEmpty ||
+        className.isEmpty ||
+        academicYearText.isEmpty ||
+        creditsText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, completa todos los campos obligatorios.'),
@@ -45,7 +57,30 @@ class _AddClassDialogState extends State<AddClassDialog> {
       return;
     }
 
-    widget.onAddClass(period, classCode, className, grade, _dependencies);
+    final academicYear = int.tryParse(academicYearText);
+    final credits = int.tryParse(creditsText);
+
+    if (academicYear == null || credits == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Por favor, ingresa valores válidos para el año académico y los créditos.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    widget.onAddClass(
+      period,
+      classCode,
+      className,
+      grade,
+      _dependencies,
+      academicYear,
+      _academicPeriod,
+      credits,
+    );
     Navigator.pop(context);
   }
 
@@ -82,6 +117,33 @@ class _AddClassDialogState extends State<AddClassDialog> {
             TextField(
               controller: _gradeController,
               decoration: const InputDecoration(labelText: 'Nota (opcional)'),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _academicYearController,
+              decoration: const InputDecoration(labelText: 'Año académico'),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              decoration: const InputDecoration(labelText: 'Período académico'),
+              value: _academicPeriod,
+              items: const [
+                DropdownMenuItem(value: 1, child: Text('1')),
+                DropdownMenuItem(value: 2, child: Text('2')),
+                DropdownMenuItem(value: 3, child: Text('3')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _academicPeriod = value ?? 1;
+                });
+              },
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _creditsController,
+              decoration: const InputDecoration(labelText: 'Créditos'),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),

@@ -46,10 +46,10 @@ class AcademicCalendarsScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 16),
                   ],
                 ),
               ),
+              const Divider(height: 30, thickness: 0.8),
               ...calendars.map((calendar) {
                 return Column(
                   children: [

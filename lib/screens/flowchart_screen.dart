@@ -115,6 +115,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     String className,
     double? grade,
     List<String> dependencies,
+    int academicYear,
+    int academicPeriod,
+    int credits,
   ) {
     final status =
         grade == null ? 'No cursada' : (grade >= 70 ? 'Aprobada' : 'Reprobada');
@@ -130,6 +133,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
           'status': status,
           'finalGrade': grade,
           'dependencies': dependencies,
+          'academicYear': academicYear,
+          'academicPeriod': academicPeriod,
+          'credits': credits,
         });
       } else {
         periods.add({
@@ -141,6 +147,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
               'status': status,
               'finalGrade': grade,
               'dependencies': dependencies,
+              'academicYear': academicYear,
+              'academicPeriod': academicPeriod,
+              'credits': credits,
             },
           ],
         });
@@ -161,20 +170,26 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
       context: context,
       builder: (context) {
         return EditClassDialog(
-          classCode: classData['classCode'] as String,
-          className: classData['className'] as String,
-          status: classData['status'] as String,
-          finalGrade: classData['finalGrade'] as double?,
+          classCode: (classData['classCode'] as String?) ?? 'N/A',
+          className: (classData['className'] as String?) ?? 'Sin nombre',
+          status: (classData['status'] as String?) ?? 'No cursada',
+          finalGrade: (classData['finalGrade'] as double?) ?? 0.0,
           allClasses: allClasses,
           dependencies:
               (classData['dependencies'] as List<dynamic>?)?.cast<String>() ??
               [],
+          academicYear: (classData['academicYear'] as int?) ?? 0,
+          academicPeriod: (classData['academicPeriod'] as int?) ?? 1,
+          credits: (classData['credits'] as int?) ?? 0,
           onEditClass: (
             updatedClassCode,
             updatedClassName,
             updatedStatus,
             updatedFinalGrade,
             updatedDependencies,
+            updatedAcademicYear,
+            updatedAcademicPeriod,
+            updatedCredits,
           ) {
             _editClass(
               period,
@@ -184,6 +199,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
               updatedStatus,
               updatedFinalGrade,
               updatedDependencies,
+              updatedAcademicYear,
+              updatedAcademicPeriod,
+              updatedCredits,
             );
           },
         );
@@ -199,6 +217,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     String updatedStatus,
     double? updatedFinalGrade,
     List<String> updatedDependencies,
+    int updatedAcademicYear,
+    int updatedAcademicPeriod,
+    int updatedCredits,
   ) {
     setState(() {
       final periodIndex = periods.indexWhere((p) => p['romanNumber'] == period);
@@ -216,6 +237,9 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
             'status': updatedStatus,
             'finalGrade': updatedFinalGrade,
             'dependencies': updatedDependencies,
+            'academicYear': updatedAcademicYear,
+            'academicPeriod': updatedAcademicPeriod,
+            'credits': updatedCredits,
           };
         }
       }
@@ -362,7 +386,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               ),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 0, 76, 190),
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
                                 grades.isNotEmpty
@@ -385,7 +409,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               ),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 0, 76, 190),
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
                                 'Clases Aprobadas: $approvedClasses',
@@ -406,7 +430,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               ),
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 0, 76, 190),
-                                borderRadius: BorderRadius.circular(50),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
                                 'Porcentaje de carrera: ${careerProgress.toStringAsFixed(2)}%',
@@ -423,7 +447,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const Divider(height: 30, thickness: 0.8),
               ..._getSortedPeriods().map((period) {
                 return Column(
                   children: [
