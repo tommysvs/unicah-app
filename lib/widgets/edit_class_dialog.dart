@@ -71,6 +71,7 @@ class _EditClassDialogState extends State<EditClassDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: const Text('Editar Clase'),
       content: SingleChildScrollView(
         child: Column(
