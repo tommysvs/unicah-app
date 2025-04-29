@@ -105,26 +105,21 @@ class _ClassRecommendationsScreenState
     int period;
 
     if (now.month >= 1 && now.month <= 3) {
-      period = 1; // Primer período
+      period = 1;
     } else if (now.month >= 5 && now.month <= 7) {
-      period = 2; // Segundo período
+      period = 2;
     } else if (now.month >= 9 && now.month <= 11) {
-      period = 3; // Tercer período
+      period = 3;
     } else {
       // Si estamos en un mes de vacaciones (Abril, Agosto, Diciembre)
       if (now.month == 4) {
-        period = 2; // Próximo período es el segundo
+        period = 2;
       } else if (now.month == 8) {
-        period = 3; // Próximo período es el tercero
+        period = 3;
       } else {
-        period = 1; // Próximo período es el primero del siguiente año
+        period = 1;
         year++;
       }
-    }
-
-    // Evitar períodos pasados
-    if (year == 2025 && period == 1) {
-      period = 2; // Saltar el período 1 de 2025
     }
 
     return {'year': year, 'period': period};
@@ -135,11 +130,6 @@ class _ClassRecommendationsScreenState
     List<Map<String, dynamic>> classes,
   ) {
     List<List<String>> recommendations = [];
-    List<String> approvedClasses =
-        classes
-            .where((c) => c['status'] == 'Aprobada')
-            .map((c) => c['className'] as String)
-            .toList();
 
     List<Map<String, dynamic>> pendingClasses =
         classes.where((c) => c['status'] == 'No cursada').toList();
@@ -151,7 +141,6 @@ class _ClassRecommendationsScreenState
 
     // Usar el método único de getCurrentPeriod
     Map<String, int> currentPeriod = getCurrentPeriod();
-    int year = currentPeriod['year']!;
     int period = currentPeriod['period']!;
 
     // Lista de períodos personalizados
@@ -182,7 +171,6 @@ class _ClassRecommendationsScreenState
             period++;
           } else {
             period = 1;
-            year++;
           }
         }
       }
@@ -211,22 +199,47 @@ class _ClassRecommendationsScreenState
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            DropdownButton<int>(
-              value: classesPerPeriod,
-              items:
-                  List.generate(5, (index) => index + 1)
-                      .map(
-                        (value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text('$value clases'),
-                        ),
-                      )
-                      .toList(),
-              onChanged: (value) {
-                setState(() {
-                  classesPerPeriod = value!;
-                });
-              },
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blueAccent),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: DropdownButton<int>(
+                dropdownColor: Colors.white,
+                value: classesPerPeriod,
+                items:
+                    List.generate(5, (index) => index + 1)
+                        .map(
+                          (value) => DropdownMenuItem<int>(
+                            value: value,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              child: Text(
+                                '$value clases',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    classesPerPeriod = value!;
+                  });
+                },
+                underline:
+                    Container(), // Elimina la línea inferior predeterminada
+                isExpanded:
+                    true, // Hace que el DropdownButton ocupe todo el ancho
+              ),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -274,9 +287,9 @@ class _ClassRecommendationsScreenState
                       return Card(
                         margin: const EdgeInsets.symmetric(
                           vertical: 8,
-                          horizontal: 16,
+                          horizontal: 2,
                         ),
-                        elevation: 4,
+                        elevation: 2,
                         color: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -302,7 +315,6 @@ class _ClassRecommendationsScreenState
                                         'status': 'No definida',
                                       },
                                 );
-
                                 return ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   title: Text(

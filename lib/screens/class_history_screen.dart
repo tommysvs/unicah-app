@@ -206,6 +206,10 @@ class ClassHistoryScreen extends StatelessWidget {
                                       return Column(
                                         children: [
                                           ListTile(
+                                            leading: const Icon(
+                                              Icons.book,
+                                              color: Colors.blueAccent,
+                                            ),
                                             title: Text(
                                               classData['className'],
                                               style: const TextStyle(

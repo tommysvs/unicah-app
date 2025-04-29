@@ -55,9 +55,9 @@ class ClassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final dynamicWidth = (screenWidth / (screenWidth > 1080 ? 3 : 2)).clamp(
+    final dynamicWidth = (screenWidth / (screenWidth > 1080 ? 4 : 2)).clamp(
       90.0,
-      150.0,
+      140.0,
     );
 
     return ConstrainedBox(

@@ -374,8 +374,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     const SizedBox(height: 16),
                     Wrap(
                       alignment: WrapAlignment.center,
-                      spacing: 16.0,
-                      runSpacing: 8.0,
+                      spacing: 8.0,
+                      runSpacing: 4.0,
                       children: [
                         Column(
                           children: [
