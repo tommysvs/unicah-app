@@ -159,7 +159,10 @@ class ClassHistoryScreen extends StatelessWidget {
                         backgroundColor: Colors.grey[50],
                         title: Text(
                           'Año $year',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         children: [
                           ...sortedPeriods.map((period) {
@@ -187,10 +190,14 @@ class ClassHistoryScreen extends StatelessWidget {
                             return Column(
                               children: [
                                 ExpansionTile(
-                                  title: Text('Período $period'),
+                                  title: Text(
+                                    'Período $period',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
                                   subtitle: Text(
                                     'Promedio: ${average.toStringAsFixed(2)}',
                                     style: const TextStyle(
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -199,7 +206,12 @@ class ClassHistoryScreen extends StatelessWidget {
                                       return Column(
                                         children: [
                                           ListTile(
-                                            title: Text(classData['className']),
+                                            title: Text(
+                                              classData['className'],
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
                                             trailing: Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -212,9 +224,9 @@ class ClassHistoryScreen extends StatelessWidget {
                                                                 as num) >=
                                                             70
                                                         ? Colors.green
-                                                            .withOpacity(0.2)
+                                                            .withOpacity(0.1)
                                                         : Colors.red
-                                                            .withOpacity(0.2),
+                                                            .withOpacity(0.1),
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                               ),
@@ -276,7 +288,7 @@ class ClassHistoryScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Promedio académico',
+                                    'Índice académico',
                                     style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black87,
@@ -284,12 +296,22 @@ class ClassHistoryScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Text(
-                                '${academicAverage.toStringAsFixed(2)}%',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueAccent,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  '${academicAverage.toStringAsFixed(2)}%',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent,
+                                  ),
                                 ),
                               ),
                             ],
@@ -315,12 +337,22 @@ class ClassHistoryScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Text(
-                                '${lastPeriodAverage.toStringAsFixed(2)}%',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueAccent,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  '${lastPeriodAverage.toStringAsFixed(2)}%',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent,
+                                  ),
                                 ),
                               ),
                             ],

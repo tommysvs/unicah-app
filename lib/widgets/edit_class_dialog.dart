@@ -194,7 +194,8 @@ class _EditClassDialogState extends State<EditClassDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          style: TextButton.styleFrom(backgroundColor: Colors.grey),
+          child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
         ),
         ElevatedButton(
           onPressed: () {
@@ -222,7 +223,10 @@ class _EditClassDialogState extends State<EditClassDialog> {
 
             Navigator.of(context).pop();
           },
-          child: const Text('Guardar'),
+          child: const Text('Editar', style: TextStyle(color: Colors.white)),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+          ),
         ),
       ],
     );

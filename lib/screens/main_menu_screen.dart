@@ -184,10 +184,8 @@ class MainMenuScreen extends StatelessWidget {
               left: 32.0,
               right: 32.0,
             ),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8.0,
-              runSpacing: 4.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: const [
                 Text(
                   'v1.0.0',

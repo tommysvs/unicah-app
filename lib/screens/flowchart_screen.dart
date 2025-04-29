@@ -390,8 +390,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                               ),
                               child: Text(
                                 grades.isNotEmpty
-                                    ? 'Promedio total: ${averageGrade.toStringAsFixed(2)}%'
-                                    : 'Promedio total: N/A',
+                                    ? 'Índice académico: ${averageGrade.toStringAsFixed(2)}%'
+                                    : 'Índice académico: N/A',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.white,

@@ -5,10 +5,10 @@ class DeleteClassDialog extends StatelessWidget {
   final Function(String) onDeleteClass;
 
   const DeleteClassDialog({
-    Key? key,
+    super.key,
     required this.allClasses,
     required this.onDeleteClass,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
