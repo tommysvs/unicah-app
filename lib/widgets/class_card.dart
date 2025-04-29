@@ -9,14 +9,14 @@ class ClassCard extends StatelessWidget {
   final bool isRelated;
 
   const ClassCard({
-    Key? key,
+    super.key,
     required this.classCode,
     required this.className,
     required this.status,
     this.finalGrade,
     this.isHighlighted = false,
     this.isRelated = false,
-  }) : super(key: key);
+  });
 
   Color _getTopBorderColor() {
     switch (status) {
@@ -55,13 +55,13 @@ class ClassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final maxWidth = (screenWidth / (screenWidth > 1080 ? 3 : 2)).clamp(
+    final dynamicWidth = (screenWidth / (screenWidth > 1080 ? 3 : 2)).clamp(
       90.0,
-      130.0,
+      150.0,
     );
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: 100.0),
+      constraints: BoxConstraints(maxWidth: dynamicWidth, maxHeight: 100.0),
       child: IntrinsicWidth(
         child: Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
