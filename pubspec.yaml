@@ -34,3 +34,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/calendars/
+
+flutter_native_splash:
+  android: false
+  ios: false
