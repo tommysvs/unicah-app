@@ -194,9 +194,31 @@ class _ClassRecommendationsScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'RECOMENDACIÓN DE CLASES',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Obtén sugerencias de clases basadas en tus clases aprobadas.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 30, thickness: 0.8),
             const Text(
               'Selecciona la cantidad de clases por período:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Container(
@@ -235,16 +257,9 @@ class _ClassRecommendationsScreenState
                     classesPerPeriod = value!;
                   });
                 },
-                underline:
-                    Container(), // Elimina la línea inferior predeterminada
-                isExpanded:
-                    true, // Hace que el DropdownButton ocupe todo el ancho
+                underline: Container(),
+                isExpanded: true,
               ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Recomendaciones:',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Expanded(
@@ -287,7 +302,7 @@ class _ClassRecommendationsScreenState
                       return Card(
                         margin: const EdgeInsets.symmetric(
                           vertical: 8,
-                          horizontal: 2,
+                          horizontal: 4,
                         ),
                         elevation: 2,
                         color: Colors.white,
@@ -299,7 +314,7 @@ class _ClassRecommendationsScreenState
                               Text(
                                 'Año $year - Período $period',
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
@@ -320,14 +335,14 @@ class _ClassRecommendationsScreenState
                                   title: Text(
                                     classDetails['className'],
                                     style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   subtitle: Text(
                                     'Créditos: ${classDetails['credits']} - Estado: ${classDetails['status']}',
                                     style: const TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 11,
                                       color: Colors.grey,
                                     ),
                                   ),

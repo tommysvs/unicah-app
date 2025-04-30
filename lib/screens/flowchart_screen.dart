@@ -307,6 +307,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     });
   }
 
+  bool _showAdditionalButtons = false;
+
   @override
   Widget build(BuildContext context) {
     final totalClasses =
@@ -472,56 +474,82 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 0, 76, 190),
-        shape: const CircularNotchedRectangle(),
-        child: Container(
-          height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed:
-                    () => PDFExporter.exportToPDF(
-                      periods,
-                      'Historial Gráfico',
-                      'Ingeniería en Ciencias de la Computación',
-                    ),
-                icon: const Icon(
-                  Icons.picture_as_pdf,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                tooltip: 'Exportar a PDF',
+      floatingActionButton: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          if (_showAdditionalButtons)
+            Positioned(
+              bottom: 200,
+              right: 16,
+              child: FloatingActionButton(
+                heroTag: 'export',
+                onPressed: () {
+                  PDFExporter.exportToPDF(
+                    periods,
+                    'Historial Gráfico',
+                    'Ingeniería en Ciencias de la Computación',
+                  );
+                  setState(() {
+                    _showAdditionalButtons = false;
+                  });
+                },
+                backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+                child: const Icon(Icons.picture_as_pdf, color: Colors.white),
               ),
-              const VerticalDivider(
+            ),
+          if (_showAdditionalButtons)
+            Positioned(
+              bottom: 140,
+              right: 16,
+              child: FloatingActionButton(
+                heroTag: 'add',
+                onPressed: () {
+                  _showAddClassDialog();
+                  setState(() {
+                    _showAdditionalButtons = false;
+                  });
+                },
+                backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+            ),
+          if (_showAdditionalButtons)
+            Positioned(
+              bottom: 80,
+              right: 16,
+              child: FloatingActionButton(
+                heroTag: 'delete',
+                onPressed: () {
+                  _showDeleteClassDialog();
+                  setState(() {
+                    _showAdditionalButtons = false;
+                  });
+                },
+                backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+            ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _showAdditionalButtons = !_showAdditionalButtons;
+                });
+              },
+              backgroundColor:
+                  _showAdditionalButtons
+                      ? const Color.fromARGB(255, 1, 43, 107)
+                      : const Color.fromARGB(255, 0, 76, 190),
+
+              child: Icon(
+                _showAdditionalButtons ? Icons.close : Icons.menu,
                 color: Colors.white,
-                thickness: 1,
-                width: 16,
-                indent: 8,
-                endIndent: 8,
               ),
-              IconButton(
-                onPressed: _showDeleteClassDialog,
-                icon: const Icon(Icons.delete, color: Colors.white, size: 20),
-                tooltip: 'Eliminar clase',
-              ),
-              const VerticalDivider(
-                color: Colors.white,
-                thickness: 1,
-                width: 16,
-                indent: 8,
-                endIndent: 8,
-              ),
-              IconButton(
-                onPressed: _showAddClassDialog,
-                icon: const Icon(Icons.add, color: Colors.white, size: 20),
-                tooltip: 'Agregar clase',
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

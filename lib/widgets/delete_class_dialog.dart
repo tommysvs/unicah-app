@@ -15,8 +15,10 @@ class DeleteClassDialog extends StatelessWidget {
     String? selectedClass;
 
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: const Text('Eliminar clase'),
       content: DropdownButtonFormField<String>(
+        dropdownColor: Colors.white,
         decoration: const InputDecoration(labelText: 'Selecciona una clase'),
         items:
             allClasses

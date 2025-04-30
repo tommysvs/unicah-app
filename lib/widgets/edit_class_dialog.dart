@@ -93,6 +93,7 @@ class _EditClassDialogState extends State<EditClassDialog> {
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _status,
+              dropdownColor: Colors.white,
               decoration: const InputDecoration(labelText: 'Estado'),
               items: const [
                 DropdownMenuItem(
@@ -126,6 +127,7 @@ class _EditClassDialogState extends State<EditClassDialog> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<int>(
+              dropdownColor: Colors.white,
               decoration: const InputDecoration(labelText: 'Período Académico'),
               value: _academicPeriod,
               items: const [
@@ -152,6 +154,7 @@ class _EditClassDialogState extends State<EditClassDialog> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
+              dropdownColor: Colors.white,
               decoration: const InputDecoration(
                 labelText: 'Agregar Dependencia',
               ),

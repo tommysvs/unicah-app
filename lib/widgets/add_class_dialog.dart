@@ -127,6 +127,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<int>(
+              dropdownColor: Colors.white,
               decoration: const InputDecoration(labelText: 'Período académico'),
               value: _academicPeriod,
               items: const [
@@ -148,6 +149,7 @@ class _AddClassDialogState extends State<AddClassDialog> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
+              dropdownColor: Colors.white,
               decoration: const InputDecoration(
                 labelText: 'Agregar dependencia',
               ),
