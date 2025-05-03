@@ -26,9 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Color.fromARGB(255, 0, 76, 190),
             ],
           ),
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(30), // Border radius inferior derecho
-          ),
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)),
         ),
         child: AppBar(
           title: Text(
