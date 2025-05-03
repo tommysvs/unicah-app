@@ -86,7 +86,8 @@ class MainMenuScreen extends StatelessWidget {
                           );
                         },
                       ),
-                    ), // Opción: Historial de clases
+                    ),
+                    // Opción: Historial de clases
                     Container(
                       decoration: const BoxDecoration(
                         border: Border(

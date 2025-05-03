@@ -387,8 +387,15 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                                 horizontal: 16,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 0, 76, 190),
-                                borderRadius: BorderRadius.circular(10),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 0, 76, 190),
+                                    Color.fromARGB(255, 0, 90, 240),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
                                 grades.isNotEmpty
@@ -410,8 +417,15 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                                 horizontal: 16,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 0, 76, 190),
-                                borderRadius: BorderRadius.circular(10),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 0, 76, 190),
+                                    Color.fromARGB(255, 0, 90, 240),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
                                 'Clases Aprobadas: $approvedClasses',
@@ -431,8 +445,15 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                                 horizontal: 16,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 0, 76, 190),
-                                borderRadius: BorderRadius.circular(10),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 0, 76, 190),
+                                    Color.fromARGB(255, 0, 90, 240),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
                                 'Porcentaje de carrera: ${careerProgress.toStringAsFixed(2)}%',
@@ -493,7 +514,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     _showAdditionalButtons = false;
                   });
                 },
-                backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+                backgroundColor: const Color.fromARGB(255, 39, 39, 39),
                 child: const Icon(Icons.picture_as_pdf, color: Colors.white),
               ),
             ),
@@ -509,7 +530,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     _showAdditionalButtons = false;
                   });
                 },
-                backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+                backgroundColor: const Color.fromARGB(255, 39, 39, 39),
                 child: const Icon(Icons.add, color: Colors.white),
               ),
             ),
@@ -525,7 +546,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                     _showAdditionalButtons = false;
                   });
                 },
-                backgroundColor: const Color.fromARGB(255, 0, 76, 190),
+                backgroundColor: const Color.fromARGB(255, 39, 39, 39),
                 child: const Icon(Icons.delete, color: Colors.white),
               ),
             ),
@@ -540,8 +561,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
               },
               backgroundColor:
                   _showAdditionalButtons
-                      ? const Color.fromARGB(255, 1, 43, 107)
-                      : const Color.fromARGB(255, 0, 76, 190),
+                      ? const Color.fromARGB(255, 27, 27, 27)
+                      : const Color.fromARGB(255, 39, 39, 39),
 
               child: Icon(
                 _showAdditionalButtons ? Icons.close : Icons.menu,
