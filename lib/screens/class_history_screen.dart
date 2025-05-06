@@ -208,7 +208,12 @@ class ClassHistoryScreen extends StatelessWidget {
                                           ListTile(
                                             leading: const Icon(
                                               Icons.book,
-                                              color: Colors.blueAccent,
+                                              color: Color.fromARGB(
+                                                255,
+                                                0,
+                                                76,
+                                                190,
+                                              ),
                                             ),
                                             title: Text(
                                               classData['className'],

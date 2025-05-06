@@ -109,12 +109,19 @@ class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
                       CalculationsHelper.calculateApprovedClasses(
                         gradedClasses,
                       );
-                  const totalCareerClasses = 60;
                   final careerProgress =
                       CalculationsHelper.calculateCareerProgress(
                         approvedClasses,
-                        totalCareerClasses,
                       );
+                  final pendingClasses =
+                      classes
+                          .where(
+                            (c) =>
+                                c['status'] == 'No cursada' ||
+                                c['status'] == 'Cursándola' ||
+                                c['status'] == 'Reprobada',
+                          )
+                          .length;
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -125,17 +132,17 @@ class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
                           _buildIndicatorCard(
                             title: 'Clases Aprobadas',
                             value: approvedClasses.toString(),
-                            color: Color.fromARGB(255, 39, 39, 39),
+                            color: Color.fromARGB(255, 0, 76, 190),
                           ),
                           _buildIndicatorCard(
                             title: 'Porcentaje Carrera',
                             value: '${careerProgress.toStringAsFixed(1)}%',
-                            color: Color.fromARGB(255, 39, 39, 39),
+                            color: Color.fromARGB(255, 0, 76, 190),
                           ),
                           _buildIndicatorCard(
-                            title: 'Total Clases',
-                            value: classes.length.toString(),
-                            color: Color.fromARGB(255, 39, 39, 39),
+                            title: 'Clases Pendientes',
+                            value: pendingClasses.toString(),
+                            color: Color.fromARGB(255, 0, 76, 190),
                           ),
                         ],
                       ),
@@ -159,14 +166,21 @@ class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: color, width: 1),
+        //side: BorderSide(color: color, width: 1),
       ),
       child: Container(
         width: 110,
         height: 80,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 39, 39, 39),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 0, 90, 240),
+              Color.fromARGB(255, 0, 76, 190),
+            ],
+          ),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(

@@ -328,10 +328,8 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     final approvedClasses = CalculationsHelper.calculateApprovedClasses(
       gradedClasses,
     );
-    const totalCareerClasses = 60;
     final careerProgress = CalculationsHelper.calculateCareerProgress(
       approvedClasses,
-      totalCareerClasses,
     );
 
     return Scaffold(

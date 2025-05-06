@@ -20,10 +20,9 @@ class CalculationsHelper {
         .length;
   }
 
-  static double calculateCareerProgress(
-    int approvedClasses,
-    int totalCareerClasses,
-  ) {
+  static int totalCareerClasses = 60;
+
+  static double calculateCareerProgress(int approvedClasses) {
     return totalCareerClasses > 0
         ? (approvedClasses / totalCareerClasses) * 100
         : 0.0;

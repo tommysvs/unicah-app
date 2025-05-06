@@ -44,7 +44,7 @@ class MainMenuScreen extends StatelessWidget {
                       child: ListTile(
                         leading: const Icon(
                           Icons.calendar_month,
-                          color: Colors.blue,
+                          color: Color.fromARGB(255, 0, 76, 190),
                         ),
                         title: const Text(
                           'Calendario académico',
@@ -76,7 +76,10 @@ class MainMenuScreen extends StatelessWidget {
                         ),
                       ),
                       child: ListTile(
-                        leading: const Icon(Icons.schema, color: Colors.blue),
+                        leading: const Icon(
+                          Icons.schema,
+                          color: Color.fromARGB(255, 0, 76, 190),
+                        ),
                         title: const Text(
                           'Historial gráfico',
                           style: TextStyle(fontSize: 16),
@@ -106,7 +109,10 @@ class MainMenuScreen extends StatelessWidget {
                         ),
                       ),
                       child: ListTile(
-                        leading: const Icon(Icons.book, color: Colors.blue),
+                        leading: const Icon(
+                          Icons.book,
+                          color: Color.fromARGB(255, 0, 76, 190),
+                        ),
                         title: const Text(
                           'Historial de clases',
                           style: TextStyle(fontSize: 16),
@@ -138,7 +144,7 @@ class MainMenuScreen extends StatelessWidget {
                       child: ListTile(
                         leading: const Icon(
                           Icons.bar_chart,
-                          color: Colors.blue,
+                          color: Color.fromARGB(255, 0, 76, 190),
                         ),
                         title: const Text(
                           'Progreso general',
@@ -172,7 +178,7 @@ class MainMenuScreen extends StatelessWidget {
                       child: ListTile(
                         leading: const Icon(
                           Icons.lightbulb,
-                          color: Colors.blue,
+                          color: Color.fromARGB(255, 0, 76, 190),
                         ),
                         title: const Text(
                           'Recomendación de clases',
