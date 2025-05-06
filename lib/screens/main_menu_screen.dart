@@ -50,6 +50,10 @@ class MainMenuScreen extends StatelessWidget {
                           'Calendario académico',
                           style: TextStyle(fontSize: 16),
                         ),
+                        subtitle: const Text(
+                          'Fechas importantes del año académico.',
+                          style: TextStyle(fontSize: 12),
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -77,6 +81,10 @@ class MainMenuScreen extends StatelessWidget {
                           'Historial gráfico',
                           style: TextStyle(fontSize: 16),
                         ),
+                        subtitle: const Text(
+                          'Avance académico representado gráficamente.',
+                          style: TextStyle(fontSize: 12),
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -102,6 +110,10 @@ class MainMenuScreen extends StatelessWidget {
                         title: const Text(
                           'Historial de clases',
                           style: TextStyle(fontSize: 16),
+                        ),
+                        subtitle: const Text(
+                          'Clases cursadas y calificaciones obtenidas.',
+                          style: TextStyle(fontSize: 12),
                         ),
                         onTap: () {
                           Navigator.push(
@@ -132,6 +144,10 @@ class MainMenuScreen extends StatelessWidget {
                           'Progreso general',
                           style: TextStyle(fontSize: 16),
                         ),
+                        subtitle: const Text(
+                          'Porcentaje de avance en la carrera.',
+                          style: TextStyle(fontSize: 12),
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -161,6 +177,10 @@ class MainMenuScreen extends StatelessWidget {
                         title: const Text(
                           'Recomendación de clases',
                           style: TextStyle(fontSize: 16),
+                        ),
+                        subtitle: const Text(
+                          'Clases recomendadas según el avance de la carrera.',
+                          style: TextStyle(fontSize: 12),
                         ),
                         onTap: () {
                           Navigator.push(
