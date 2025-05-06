@@ -6,6 +6,7 @@ import '../widgets/add_class_dialog.dart';
 import '../widgets/edit_class_dialog.dart';
 import '../widgets/delete_class_dialog.dart';
 import '../utils/pdf_exporter.dart';
+import '../helpers/calculations_helper.dart';
 
 class FlowchartScreen extends StatefulWidget {
   const FlowchartScreen({super.key});
@@ -312,33 +313,26 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
   @override
   Widget build(BuildContext context) {
     final totalClasses =
-        periods.expand((period) => period['classes'] as List<dynamic>).toList();
-
-    final gradedClasses =
-        totalClasses
-            .where(
-              (classData) =>
-                  classData['finalGrade'] != null &&
-                  classData['finalGrade'] != 0,
+        periods
+            .expand(
+              (period) => (period['classes'] as List<dynamic>).map(
+                (e) => Map<String, dynamic>.from(e as Map),
+              ),
             )
             .toList();
 
-    final grades =
-        gradedClasses
-            .map((classData) => classData['finalGrade'] as double)
-            .toList();
-    final averageGrade =
-        grades.isNotEmpty
-            ? (grades.reduce((a, b) => a + b) / grades.length)
-            : 0;
-
-    final approvedClasses =
-        gradedClasses
-            .where((classData) => classData['status'] == 'Aprobada')
-            .length;
-
+    final gradedClasses = CalculationsHelper.filterGradedClasses(totalClasses);
+    final averageGrade = CalculationsHelper.calculateAverageGrade(
+      gradedClasses,
+    );
+    final approvedClasses = CalculationsHelper.calculateApprovedClasses(
+      gradedClasses,
+    );
     const totalCareerClasses = 60;
-    final careerProgress = (approvedClasses / totalCareerClasses) * 100;
+    final careerProgress = CalculationsHelper.calculateCareerProgress(
+      approvedClasses,
+      totalCareerClasses,
+    );
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -398,7 +392,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: Text(
-                                grades.isNotEmpty
+                                gradedClasses.isNotEmpty
                                     ? 'Índice académico: ${averageGrade.toStringAsFixed(2)}%'
                                     : 'Índice académico: N/A',
                                 style: const TextStyle(

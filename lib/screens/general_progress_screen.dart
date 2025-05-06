@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/custom_app_bar.dart';
+import '../helpers/calculations_helper.dart';
 
 class GeneralProgressScreen extends StatefulWidget {
   const GeneralProgressScreen({super.key});
 
   @override
   _GeneralProgressScreenState createState() => _GeneralProgressScreenState();
+}
+
+List<Map<String, dynamic>> processSnapshotData(QuerySnapshot snapshot) {
+  return snapshot.docs.expand((doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    final classList = data['classes'] as List<dynamic>? ?? [];
+    return classList.whereType<Map<String, dynamic>>().map((classData) {
+      return {
+        'className': classData['className'] ?? 'Sin nombre',
+        'finalGrade': classData['finalGrade'] ?? 0,
+        'credits': classData['credits'] ?? 0,
+        'status': classData['status'] ?? 'Sin estado',
+        'dependencies': List<String>.from(classData['dependencies'] ?? []),
+      };
+    }).toList();
+  }).toList();
 }
 
 class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
@@ -22,27 +40,7 @@ class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
     try {
       final snapshot =
           await FirebaseFirestore.instance.collection('periods').get();
-
-      if (snapshot.docs.isNotEmpty) {
-        return snapshot.docs.expand((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-
-          final classList = data['classes'] as List<dynamic>? ?? [];
-          return classList.whereType<Map<String, dynamic>>().map((classData) {
-            return {
-              'className': classData['className'] ?? 'Sin nombre',
-              'finalGrade': classData['finalGrade'] ?? 0,
-              'credits': classData['credits'] ?? 0,
-              'status': classData['status'] ?? 'Sin estado',
-              'dependencies': List<String>.from(
-                classData['dependencies'] ?? [],
-              ),
-            };
-          }).toList();
-        }).toList();
-      } else {
-        return [];
-      }
+      return processSnapshotData(snapshot);
     } catch (e) {
       print('Error fetching data: $e');
       return [];
@@ -104,41 +102,19 @@ class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
                   }
 
                   final classes = snapshot.data!;
-                  final totalClasses =
-                      classes
-                          .expand(
-                            (period) =>
-                                period['classes'] as List<dynamic>? ?? [],
-                          )
-                          .toList();
-                  final gradedClasses =
-                      totalClasses
-                          .where(
-                            (classData) =>
-                                classData['finalGrade'] != null &&
-                                classData['finalGrade'] != 0,
-                          )
-                          .toList();
-
-                  final grades =
-                      gradedClasses
-                          .map((classData) => classData['finalGrade'] as double)
-                          .toList();
-                  final averageGrade =
-                      grades.isNotEmpty
-                          ? (grades.reduce((a, b) => a + b) / grades.length)
-                          : 0;
-
+                  final gradedClasses = CalculationsHelper.filterGradedClasses(
+                    classes,
+                  );
                   final approvedClasses =
-                      gradedClasses
-                          .where(
-                            (classData) => classData['status'] == 'Aprobada',
-                          )
-                          .length;
-
+                      CalculationsHelper.calculateApprovedClasses(
+                        gradedClasses,
+                      );
                   const totalCareerClasses = 60;
                   final careerProgress =
-                      (approvedClasses / totalCareerClasses) * 100;
+                      CalculationsHelper.calculateCareerProgress(
+                        approvedClasses,
+                        totalCareerClasses,
+                      );
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -158,7 +134,7 @@ class _GeneralProgressScreenState extends State<GeneralProgressScreen> {
                           ),
                           _buildIndicatorCard(
                             title: 'Total Clases',
-                            value: totalClasses.toString(),
+                            value: classes.length.toString(),
                             color: Color.fromARGB(255, 39, 39, 39),
                           ),
                         ],

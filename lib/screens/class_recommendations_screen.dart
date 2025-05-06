@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:unicah_app/widgets/custom_app_bar.dart';
+import '../helpers/data_processing_helper.dart';
 
 class ClassRecommendationsScreen extends StatefulWidget {
   const ClassRecommendationsScreen({super.key});
@@ -14,25 +15,6 @@ class _ClassRecommendationsScreenState
     extends State<ClassRecommendationsScreen> {
   int classesPerPeriod = 3;
 
-  // Método para procesar los datos del snapshot
-  List<Map<String, dynamic>> processSnapshotData(QuerySnapshot snapshot) {
-    return snapshot.docs.expand((doc) {
-      final data = doc.data() as Map<String, dynamic>;
-
-      final classList = data['classes'] as List<dynamic>? ?? [];
-      return classList.whereType<Map<String, dynamic>>().map((classData) {
-        return {
-          'className': classData['className'] ?? 'Sin nombre',
-          'finalGrade': classData['finalGrade'] ?? 0,
-          'credits': classData['credits'] ?? 0,
-          'status': classData['status'] ?? 'Sin estado',
-          'dependencies': List<String>.from(classData['dependencies'] ?? []),
-        };
-      }).toList();
-    }).toList();
-  }
-
-  // Método para ordenar las clases según las dependencias
   List<Map<String, dynamic>> sortClassesByDependencies(
     List<Map<String, dynamic>> classes,
   ) {
@@ -40,7 +22,6 @@ class _ClassRecommendationsScreenState
     final Map<String, int> inDegree = {};
     final List<Map<String, dynamic>> sortedClasses = [];
 
-    // Construir el grafo y calcular el grado de entrada (in-degree)
     for (var classData in classes) {
       final className = classData['className'];
       final dependencies = classData['dependencies'] as List<String>;
@@ -53,19 +34,16 @@ class _ClassRecommendationsScreenState
       }
     }
 
-    // Encontrar nodos sin dependencias (in-degree == 0)
     final queue = <String>[];
     inDegree.forEach((key, value) {
       if (value == 0) queue.add(key);
     });
 
-    // Ordenamiento topológico
     final visited = <String>{};
     while (queue.isNotEmpty) {
       final current = queue.removeAt(0);
       visited.add(current);
 
-      // Manejar el caso en que no se encuentre la clase
       final currentClass = classes.firstWhere(
         (c) => c['className'] == current,
         orElse:
@@ -86,7 +64,6 @@ class _ClassRecommendationsScreenState
       }
     }
 
-    // Verificar si hay ciclos
     final unresolved =
         graph.keys.where((key) => !visited.contains(key)).toList();
     if (unresolved.isNotEmpty) {
@@ -98,7 +75,6 @@ class _ClassRecommendationsScreenState
     return sortedClasses;
   }
 
-  // Método único para calcular el período actual
   Map<String, int> getCurrentPeriod() {
     final now = DateTime.now();
     int year = now.year;
@@ -111,7 +87,6 @@ class _ClassRecommendationsScreenState
     } else if (now.month >= 9 && now.month <= 11) {
       period = 3;
     } else {
-      // Si estamos en un mes de vacaciones (Abril, Agosto, Diciembre)
       if (now.month == 4) {
         period = 2;
       } else if (now.month == 8) {
@@ -125,7 +100,6 @@ class _ClassRecommendationsScreenState
     return {'year': year, 'period': period};
   }
 
-  // Método para generar recomendaciones dinámicas
   List<List<String>> generateRecommendations(
     List<Map<String, dynamic>> classes,
   ) {
@@ -134,16 +108,13 @@ class _ClassRecommendationsScreenState
     List<Map<String, dynamic>> pendingClasses =
         classes.where((c) => c['status'] == 'No cursada').toList();
 
-    // Ordenar las clases pendientes según las dependencias
     List<Map<String, dynamic>> sortedClasses = sortClassesByDependencies(
       pendingClasses,
     );
 
-    // Usar el método único de getCurrentPeriod
     Map<String, int> currentPeriod = getCurrentPeriod();
     int period = currentPeriod['period']!;
 
-    // Lista de períodos personalizados
     final List<String> periodNames = [
       'I',
       'II',
@@ -160,13 +131,11 @@ class _ClassRecommendationsScreenState
       'XIII',
     ];
 
-    // Generar recomendaciones dinámicamente
     for (var classData in sortedClasses) {
       if (recommendations.isEmpty ||
           recommendations.last.length >= classesPerPeriod) {
         recommendations.add([]);
         if (recommendations.length > 1) {
-          // Avanzar al siguiente período
           if (period < periodNames.length) {
             period++;
           } else {
@@ -282,12 +251,9 @@ class _ClassRecommendationsScreenState
                     );
                   }
 
-                  // Procesar los datos del snapshot
-                  List<Map<String, dynamic>> classes = processSnapshotData(
-                    snapshot.data!,
-                  );
+                  List<Map<String, dynamic>> classes =
+                      DataProcessingHelper.processSnapshotData(snapshot.data!);
 
-                  // Generar recomendaciones
                   List<List<String>> recommendations = generateRecommendations(
                     classes,
                   );
