@@ -35,6 +35,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/calendars/
+    - assets/images/profile_photos/
 
 flutter_native_splash:
   android: false

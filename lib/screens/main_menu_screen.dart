@@ -13,7 +13,7 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const CustomAppBar(title: 'Registro'),
+      appBar: const CustomAppBar(title: 'Registro', showProfilePicture: true),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -221,12 +221,6 @@ class MainMenuScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
                   ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Esta aplicación es solo para uso personal y no pretende reemplazar la aplicación oficial de la UNICAH.',
-                  style: TextStyle(fontSize: 11, color: Colors.grey),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),
