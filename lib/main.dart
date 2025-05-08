@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'screens/main_menu_screen.dart';
+import 'screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +18,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'UNICAH',
       theme: ThemeData.light(),
-      themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      home: const MainMenuScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const MainMenuScreen(),
+        '/profile': (context) => const ProfileScreen(),
+      },
     );
   }
 }
