@@ -82,6 +82,18 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
     return romanMap[roman] ?? 0;
   }
 
+  double? _convertToDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is num) return value.toDouble();
+    if (value is String) {
+      final parsed = double.tryParse(value);
+      return parsed;
+    }
+    return null;
+  }
+
   List<Map<String, dynamic>> _getSortedPeriods() {
     final sortedPeriods = List<Map<String, dynamic>>.from(periods);
     sortedPeriods.sort((a, b) {
@@ -174,7 +186,7 @@ class _FlowchartScreenState extends State<FlowchartScreen> {
           classCode: (classData['classCode'] as String?) ?? 'N/A',
           className: (classData['className'] as String?) ?? 'Sin nombre',
           status: (classData['status'] as String?) ?? 'No cursada',
-          finalGrade: (classData['finalGrade'] as double?) ?? 0.0,
+          finalGrade: _convertToDouble(classData['finalGrade']),
           allClasses: allClasses,
           dependencies:
               (classData['dependencies'] as List<dynamic>?)?.cast<String>() ??

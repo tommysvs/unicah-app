@@ -3,9 +3,17 @@ class CalculationsHelper {
     List<Map<String, dynamic>> gradedClasses,
   ) {
     final grades =
-        gradedClasses
-            .map((classData) => classData['finalGrade'] as double)
-            .toList();
+        gradedClasses.map((classData) {
+          final grade = classData['finalGrade'];
+          if (grade is int) {
+            return grade.toDouble();
+          } else if (grade is double) {
+            return grade;
+          } else if (grade is num) {
+            return grade.toDouble();
+          }
+          return 0.0;
+        }).toList();
 
     return grades.isNotEmpty
         ? (grades.reduce((a, b) => a + b) / grades.length)
@@ -31,11 +39,11 @@ class CalculationsHelper {
   static List<Map<String, dynamic>> filterGradedClasses(
     List<Map<String, dynamic>> totalClasses,
   ) {
-    return totalClasses
-        .where(
-          (classData) =>
-              classData['finalGrade'] != null && classData['finalGrade'] != 0,
-        )
-        .toList();
+    return totalClasses.where((classData) {
+      final grade = classData['finalGrade'];
+      return grade != null &&
+          ((grade is num && grade != 0) ||
+              (grade is String && grade.isNotEmpty && grade != '0'));
+    }).toList();
   }
 }

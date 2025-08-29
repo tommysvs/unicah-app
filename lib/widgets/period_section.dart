@@ -19,6 +19,18 @@ class PeriodSection extends StatelessWidget {
     required this.onEditClass,
   });
 
+  double? _convertToDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is num) return value.toDouble();
+    if (value is String) {
+      final parsed = double.tryParse(value);
+      return parsed;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,7 +79,7 @@ class PeriodSection extends StatelessWidget {
                           classCode: classData['classCode'],
                           className: classData['className'],
                           status: classData['status'],
-                          finalGrade: classData['finalGrade'],
+                          finalGrade: _convertToDouble(classData['finalGrade']),
                           isHighlighted: isHighlighted,
                           isRelated: isRelated,
                         ),
