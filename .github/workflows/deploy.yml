@@ -3,8 +3,12 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -12,23 +16,41 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.24.0'
+        flutter-version: '3.24.3'
         channel: 'stable'
+        cache: true
         
+    - name: Verify Flutter installation
+      run: |
+        flutter --version
+        flutter doctor -v
+        
+    - name: Enable web platform
+      run: flutter config --enable-web
+      
     - name: Get dependencies
       run: flutter pub get
       
     - name: Build web
-      run: flutter build web --base-href "/unicah_app/"
+      run: |
+        flutter build web \
+          --base-href "/unicah_app/" \
+          --release \
+          --dart-define=Dart2jsOptimization=O4
+      
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./build/web
       
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/main'
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build/web
+      id: deployment
+      uses: actions/deploy-pages@v4
