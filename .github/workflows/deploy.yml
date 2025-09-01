@@ -1,4 +1,4 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -17,16 +17,19 @@ jobs:
       uses: subosito/flutter-action@v2
       with:
         flutter-version: 'stable'
-        channel: 'stable'
         
-    - name: Get dependencies
+    - name: Install dependencies
       run: flutter pub get
       
     - name: Build web
       run: flutter build web --base-href="/unicah_app/"
       
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build/web
+    - name: Deploy to gh-pages
+      run: |
+        cd build/web
+        git init
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add .
+        git commit -m "Deploy $(date)"
+        git push --force https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages
